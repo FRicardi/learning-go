@@ -1,10 +1,8 @@
 package albumService
 
 import (
+	"errors"
 	types "example/gin-vinyl-store/packages"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
 var albums = []types.Album{
@@ -13,32 +11,22 @@ var albums = []types.Album{
 	{ID: "3", Title: "Sarah Vaughan", Artist: "Sarah Vaughan", Price: 39.99},
 }
 
-func GetAlbums(ginContext *gin.Context) {
-	ginContext.IndentedJSON(http.StatusOK, albums)
+func GetAlbums() []types.Album {
+	return albums
 }
 
-func AddAlbums(ginContext *gin.Context) {
-	var newAlbum types.Album
-
-	// makes use of executing something before IF method
-	if err := ginContext.BindJSON(&newAlbum); err != nil {
-		// kills the method
-		return
-	}
-
+func AddAlbum(newAlbum types.Album) types.Album {
 	albums = append(albums, newAlbum)
-	ginContext.IndentedJSON(http.StatusCreated, newAlbum)
+	return newAlbum
 }
 
-func GetAlbumByID(ginContext *gin.Context) {
-	id := ginContext.Param("id")
+func GetAlbumByID(id string) (*types.Album, error) {
 
 	for _, album := range albums {
 		if album.ID == id {
-			ginContext.IndentedJSON(http.StatusOK, album)
-			return
+			return &album, nil
 		}
 	}
 
-	ginContext.IndentedJSON(http.StatusNotFound, gin.H{"message": "album nottfound"})
+	return &types.Album{}, errors.New("Album not found")
 }
