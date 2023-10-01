@@ -2,7 +2,7 @@ package albumService
 
 import (
 	"errors"
-	types "example/gin-vinyl-store/packages"
+	types "example/gin-vinyl-store/types"
 )
 
 var albums = []types.Album{

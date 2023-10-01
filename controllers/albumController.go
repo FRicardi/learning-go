@@ -1,8 +1,8 @@
 package albumController
 
 import (
-	types "example/gin-vinyl-store/packages"
 	albumService "example/gin-vinyl-store/services"
+	types "example/gin-vinyl-store/types"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
