@@ -1,16 +1,16 @@
 package main
 
 import (
-	albumService "example/gin-vinyl-store/services"
+	albumController "example/gin-vinyl-store/controllers"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	router := gin.Default()
-	router.GET("/albums", albumService.GetAlbums)
-	router.GET("/albums/:id", albumService.GetAlbumByID)
-	router.POST("/albums", albumService.AddAlbums)
+	router.GET("/albums", albumController.GetAlbums)
+	router.GET("/albums/:id", albumController.GetAlbumByID)
+	router.POST("/albums", albumController.PostAlbums)
 
 	router.Run("localhost:8080")
 }
