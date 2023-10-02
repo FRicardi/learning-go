@@ -4,12 +4,13 @@ import (
 	albumService "example/gin-vinyl-store/services"
 	types "example/gin-vinyl-store/types"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAlbums(ctx *gin.Context) {
-	if albums, error := albumService.GetAlbums(); error != nil {
+	if albums, error := albumService.GetAlbums(); error == nil {
 		ctx.IndentedJSON(http.StatusOK, albums)
 	} else {
 		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": error})
@@ -17,9 +18,9 @@ func GetAlbums(ctx *gin.Context) {
 }
 
 func GetAlbumByID(ctx *gin.Context) {
-	id := ctx.Param("id")
+	id, _ := strconv.Atoi(ctx.Param("id"))
 
-	if album, error := albumService.GetAlbumByID(id); error == nil {
+	if album, error := albumService.GetAlbumByID(int64(id)); error == nil {
 		ctx.IndentedJSON(http.StatusOK, *album)
 	} else {
 		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": error})
@@ -34,8 +35,8 @@ func PostAlbums(ctx *gin.Context) {
 		return
 	}
 
-	if createdAlbumID, error := albumService.AddAlbum(newAlbum); error != nil {
-		ctx.IndentedJSON(http.StatusCreated, createdAlbumID)
+	if rowsAffected, error := albumService.AddAlbum(newAlbum); error == nil {
+		ctx.IndentedJSON(http.StatusCreated, rowsAffected)
 	} else {
 		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": error})
 	}
