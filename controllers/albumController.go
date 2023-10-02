@@ -9,9 +9,11 @@ import (
 )
 
 func GetAlbums(ctx *gin.Context) {
-	albums := albumService.GetAlbums()
-
-	ctx.IndentedJSON(http.StatusOK, albums)
+	if albums, error := albumService.GetAlbums(); error != nil {
+		ctx.IndentedJSON(http.StatusOK, albums)
+	} else {
+		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": error})
+	}
 }
 
 func GetAlbumByID(ctx *gin.Context) {
@@ -32,6 +34,9 @@ func PostAlbums(ctx *gin.Context) {
 		return
 	}
 
-	createdAlbum := albumService.AddAlbum(newAlbum)
-	ctx.IndentedJSON(http.StatusCreated, createdAlbum)
+	if createdAlbumID, error := albumService.AddAlbum(newAlbum); error != nil {
+		ctx.IndentedJSON(http.StatusCreated, createdAlbumID)
+	} else {
+		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": error})
+	}
 }
